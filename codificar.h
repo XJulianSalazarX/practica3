@@ -9,7 +9,7 @@
 #include <exception>
 
 using namespace std;
-//menu principal
+//menu ejercicio de codificación
 void principal();
 void Str();
 void Char();

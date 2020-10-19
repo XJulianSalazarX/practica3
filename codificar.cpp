@@ -1,5 +1,5 @@
 #include "codificar.h"
-
+//menu ejercicio de codificar
 void principal(){
     try{
         int opc=0;
@@ -88,3 +88,8 @@ void Metodo1Char(){
 void Metodo2Char(){
 
 }
+
+//metodo dos para string
+
+
+//metodo dos para char

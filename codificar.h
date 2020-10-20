@@ -25,5 +25,7 @@ void EscribirArchivo_dat(string,string);
 string LeerArchivo_dat(string);
 string decodificacion2(string, int);
 string cambiar_decof(string);
+string Binary_to_Str(string);
+void EscribirArchivo_txt(string,string);
 
 #endif // CODIFICAR_H

@@ -60,8 +60,9 @@ void Metodo2str()
             cout << "Ingrese la semilla de codificacion -> ";cin >> semilla;
             texto = LeerArchivo_txt(archivo);
             texto = codificacion2(texto,semilla);
+            texto = Binary_to_Str(texto);
             cin.ignore(10000,'\n');
-            cout << "Ingrse nombre del archivo .dat a guardar archivo codificado ej(codificado.dat)" << endl;
+            cout << "Ingrese nombre del archivo .dat donde guardar el archivo codificado ej(codificado.dat)" << endl;
             cout << "Nombre: ";getline(cin,archivo);
             EscribirArchivo_dat(archivo,texto);
         }
@@ -73,8 +74,13 @@ void Metodo2str()
             cout << "Nombre: ";getline(cin,archivo);
             cout << "Ingrese la semilla de decodificacion -> ";cin >> semilla;
             texto = LeerArchivo_dat(archivo);
+            texto = Str_to_Binary(texto);
             texto = decodificacion2(texto,semilla);
-            cout << texto;
+            texto = Binary_to_Str(texto);
+            cin.ignore(10000,'\n');
+            cout << "Ingrese nombre del archivo donde guardar el archivo decodificado ej(prueba.txt)" << endl;
+            cout << "Nombre: ";getline(cin,archivo);
+            EscribirArchivo_txt(archivo,texto);
         }
             break;
         default:
@@ -207,4 +213,26 @@ string cambiar_decof(string binario)
     }
     binario_decof += binario[0];
     return binario_decof;
+}
+
+string Binary_to_Str(string binario)
+{
+    string caracter,texto;
+    for(int i=0; i<int(binario.length());i+=8){
+        caracter = binario.substr(i,8);
+        caracter = stoi(caracter, nullptr, 2);
+        texto.append(caracter);
+    }
+    return texto;
+}
+
+void EscribirArchivo_txt(string archivo,string texto)
+{
+    fstream escribir;
+    escribir.open(archivo,fstream::out);
+    if(escribir.fail())
+        throw '2';
+    escribir<<texto;
+    escribir.close();
+
 }

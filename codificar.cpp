@@ -1,6 +1,8 @@
 #include "codificar.h"
+
 //menu ejercicio de codificar
-void principal(){
+void principal()
+{
     try{
         int opc=0;
         cout << "Ingrese:\n1.Usar metodo1 (char).\n2.Usar metodo2 (string).\n0.Salir.\n";
@@ -40,13 +42,18 @@ void Metodo1Char(){
 }
 
 //metodo 2 string
-void Metodo2str(){
+void Metodo2str()
+{
     string archivo,codificar;
+    int semilla;
     cin.ignore(10000,'\n');
     cout << "Ingrese nombre del archivo de texto a codificar ej(codificar.txt)." << endl;
     cout << "Nombre: ";getline(cin,archivo);
+    cout << "Ingrese la semilla de codificacion -> ";cin >> semilla;
     codificar = LeerArchivo_txt(archivo);
-    cout << endl;
+    codificar = codificacion2(codificar,semilla);
+    cout << codificar << endl;
+
 }
 
 
@@ -60,9 +67,11 @@ string LeerArchivo_txt(string archivo)
         throw '1';
     while(lectura.good()){
         getline(lectura,linea);
-        texto += linea;
-        texto += "\n";
+        texto.append(linea);
+        texto.append("\n");
     }
+    lectura.close();
+    texto.pop_back();
     texto = Str_to_Binary(texto);
 
     return texto;
@@ -75,4 +84,32 @@ string Str_to_Binary(string texto)
         for(int j=0;j<8;j++) binario.push_back(char((((texto[i]<<j)&(0x80))/128)+48));
     }
     return binario;
+}
+
+string codificacion2(string texto, int semilla)
+{
+    string parte,codificado;
+    if(semilla < int(texto.length()))  {
+        for(unsigned long long int i=0;i<texto.length();i+=semilla){
+            if(i+semilla<texto.length())
+                parte = texto.substr(i,semilla);
+            else
+                parte = texto.substr(i);
+            codificado.append(Cambiar_pos(parte));
+            parte.clear();
+        }
+    }
+    else
+        codificado.append(Cambiar_pos(texto));
+    return codificado;
+}
+
+string Cambiar_pos(string binario)
+{
+    string binarioCodif;
+    binarioCodif += binario[binario.length()-1];
+    for(int i=0; i<int(binario.length())-1; i++){
+        binarioCodif += binario[i];
+    }
+    return binarioCodif;
 }

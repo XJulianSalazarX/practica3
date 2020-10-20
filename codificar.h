@@ -11,14 +11,11 @@
 using namespace std;
 //menu ejercicio de codificación
 void principal();
-void Str();
-void Char();
-void Metodo1str();
-void Metodo2str();
 void Metodo1Char();
-void Metodo2Char();
-
+void Metodo2str();
 
 //metodo de codificacion2 string
+string LeerArchivo_txt(string);
+string Str_to_Binary(string);
 
 #endif // CODIFICAR_H

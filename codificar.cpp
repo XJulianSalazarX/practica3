@@ -5,7 +5,8 @@ void principal()
 {
     try{
         int opc=0;
-        cout << "Ingrese:\n1.Usar metodo1 (char).\n2.Usar metodo2 (string).\n0.Salir.\n";
+        cout<<"----------Seleccion de metodo----------\n";
+        cout << "\nIngrese:\n1.Usar metodo1 (char).\n2.Usar metodo2 (string).\n0.Salir.\n";
         cout << "Eliga una opcion -> ";cin >> opc;
         while (opc != 0){
             switch (opc) {
@@ -21,6 +22,7 @@ void principal()
                 cout << "Opcion no valida" << endl;
             }
             cout << endl;
+            cout<<"----------Seleccion de metodo----------\n";
             cout << "Ingrese:\n1.Usar metodo1 (char).\n2.Usar metodo2 (string).\n0.Salir.\n";
             cout << "Eliga una opcion -> ";cin >> opc;
         }
@@ -47,7 +49,7 @@ void Metodo2str()
     int opc = 0;
     string archivo,texto;
     int semilla;
-    cout <<"Ingrese:\n1.Para codificar archivo.\n2.Para decodificar archivo.\n0.Salir.\n";
+    cout <<"\nIngrese:\n1.Para codificar archivo.\n2.Para decodificar archivo.\n0.Salir.\n";
     cout <<"Seleccione -> ";cin>>opc;
     while(opc!=0){
         switch (opc) {

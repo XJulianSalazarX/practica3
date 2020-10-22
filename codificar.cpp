@@ -77,7 +77,7 @@ void Metodo1Char()
             texto[longitud] = '\0';
 
             delete [] archivo;
-            cout << "Ingrese el numero de caractres del archivo .dat -> ";cin >> longitud;
+            cout << "Ingrese el numero de caractres donde guardar el archivo codificado .dat -> ";cin >> longitud;
             archivo = new char[longitud+1];
             fflush(stdin);
             cout << "Ingrese nombre del archivo .dat donde guardar el archivo codificado ej(codificado.dat)" << endl;
@@ -92,11 +92,12 @@ void Metodo1Char()
         }
             break;
         case 2:{
-            cout << "Ingrese el numero de caractres del archivo .dat -> ";cin >> longitud;
+            cout << "Ingrese el numero de caractres del archivo .dat a decodificar -> ";cin >> longitud;
             archivo = new char[longitud+1];
             fflush(stdin);
             cout << "Ingrese el nombre del archivo a decodificar (el archivo debe existir y ser .dat ej codificado.dat)\n";
             cout << "Nombre: ";gets(archivo);
+            cout << "Ingrese la semilla de decodificacion -> ";cin >> semilla;
             archivo[longitud] = '\0';
             //longitud del archivo
             longitud = Longitud_Archivo(archivo);
@@ -110,8 +111,22 @@ void Metodo1Char()
             //pasa de caracteres a binario
             Char_to_Binary(texto,binario,longitud);
             binario[longitud*8] = '\0';
+            //decodifica binario
+            decodificacion1(semilla,binario,longitud);
+            binario[longitud*8] = '\0';
+            //pasa de binario a caracteres
+            Binary_to_Char(binario,texto,longitud);
+            texto[longitud] = '\0';
 
-
+            delete [] archivo;
+            cout << "Ingrese el numero de caractres del archivo .txt donde gardar el archivo decodificado -> ";cin >> longitud;
+            archivo = new char[longitud+1];
+            fflush(stdin);
+            cout << "Ingrese nombre del archivo .dat donde guardar el archivo decodificado ej(prueba.txt)" << endl;
+            cout << "Nombre: ";gets(archivo);
+            archivo[longitud] = '\0';
+            //guarda en el .dat lo que hay en texto
+            EscribirArchivoChar_dat(archivo,texto);
 
             delete [] binario;
             delete [] texto;
@@ -301,6 +316,17 @@ string cambiar_decof(string binario)
 
 string Binary_to_Str(string binario)
 {
+//    int exp=0, num=0;
+//    string texto;
+//    for(long long int i=0; i<int(binario.size());i++){
+//        for(int j=7;j>=0;j--){
+//            num+=(int(binario[j+8*i])-48)*pow(2,exp);
+//            exp++;
+//        }
+//        texto += num;
+//        num=0;
+//        exp=0;
+//    }
     string caracter,texto;
     for(int i=0; i<int(binario.length());i+=8){
         caracter = binario.substr(i,8);
@@ -402,9 +428,14 @@ void LeerArchivoChar_dat(char *archivo, char *texto)
     lectura.close();
 }
 
-void EscribirArchivoChar_txt(char *, char *)
+void EscribirArchivoChar_txt(char *archivo, char *texto)
 {
-
+    fstream escribir;
+    escribir.open(archivo,fstream::out);
+    if(escribir.fail())
+        throw '2';
+    escribir<<texto;
+    escribir.close();
 }
 
 void codificacion1(int semilla, char *bin,long long int longitud)
@@ -439,6 +470,7 @@ void codificacion1(int semilla, char *bin,long long int longitud)
             if(bin[j]==48) cont0++;
             else if(bin[j]==49) cont1++;
         }
+
         if(cont0>cont1){
             for(int num=0;num<semilla;j++,num++){
 
@@ -488,6 +520,7 @@ void codificacion1(int semilla, char *bin,long long int longitud)
 
         else{
             for (int num=0;num<semilla ;j++,num++ ){
+                if(pos==longitud*8) break;
                 if(bin[j]==49){
                     bincod[pos] = '0';
                     pos ++;
@@ -508,7 +541,104 @@ void codificacion1(int semilla, char *bin,long long int longitud)
     delete [] bincod;
 }
 
-void decodificacion1(int, char *, long long)
+void decodificacion1(int semilla, char *bin, long long longitud)
 {
+    char *bincod;
+    bincod = new char[longitud*8+1];
+    bincod[longitud*8] = '\0';
 
+    long long int pos=0;
+
+    for(int i=0; i<semilla;i++){
+        if(pos==longitud*8) break;
+
+        if(bin[i]==49){
+            bincod[pos] = '0';
+            pos ++;
+        }
+        else{
+            bincod[pos]='1';
+            pos ++;
+        }
+    }
+
+    long long int j=0;
+    int cont0=0,cont1=0;
+
+    while (j+semilla<longitud*8){
+        int con=0;
+
+        for(int k=0;k<semilla;k++,j++){
+            if(bincod[j]==48) cont0++;
+            else if(bincod[j]==49) cont1++;
+        }
+        if(cont0==cont1){
+
+            for (int num=0;num<semilla ;j++,num++ ){
+                if(pos==longitud*8) break;
+
+                if(bin[j]==49){
+                    bincod[pos] = '0';
+                    pos ++;
+                }
+                else{
+                    bincod[pos] = '1';
+                    pos ++;
+                }
+            }
+            j = j-semilla;
+        }
+        else if(cont0>cont1){
+            for(int num=0;num<semilla;j++,num++){
+
+                if(pos==longitud*8) break;
+                if(con==1){
+                    if(bin[j]==49){
+                        bincod[pos] = '0';
+                        pos ++;
+                    }
+                    else{
+                        bincod[pos] = '1';
+                        pos ++;
+                    }
+                    con = 0;
+                }
+                else{
+                    bincod[pos] = bin[j];
+                    pos ++;
+                    con=con+1;
+                }
+            }
+            j=j-semilla;
+        }
+        else if(cont0<cont1){
+            for(int num=0;num<semilla ;j++,num++){
+                if(pos==longitud*8) break;
+
+                if(con==2){
+                    if(bin[j]==49){
+                        bincod[pos] = '0';
+                        pos ++;
+                    }
+                    else{
+                        bincod[pos] = '1';
+                        pos ++;
+                    }
+                    con = 0;
+                }
+                else{
+                    bincod[pos] = bin[j];
+                    pos ++;
+                }
+            }
+            j = j-semilla;
+        }
+
+        cont0=0;
+        cont1=0;
+    }
+    bincod[longitud*8] = '\0';
+    strcpy(bin,bincod);
+
+    delete [] bincod;
 }

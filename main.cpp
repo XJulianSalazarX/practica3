@@ -3,7 +3,7 @@
 int main()
 {
     int opc=0;
-    cout << "-----------Seccion principal------------\n";
+    cout << "----------------Seccion principal----------------\n";
     cout<<"Ingrese:\n1.Usar metodos de codificacion y decodificacion.\n2.Usar cajero.\n0. Para salir.\n";
     cout<<"Selecione una opcion: ";cin>>opc;
     while (opc!=0) {
@@ -21,8 +21,8 @@ int main()
             cout<<"Opcion no valida.\n";
         }
         cout << endl;
-        cout << "-----------Seccion principal------------\n";
-        cout<<"Ingrese:\n1. para usar metodos de codificacion y decodificacion.\n2.Para usar cajero.\n0. Para salir.\n";
+        cout << "----------------Seccion principal----------------\n";
+        cout<<"Ingrese:\n1.Usar metodos de codificacion y decodificacion.\n2.Usar cajero.\n0.Salir.\n";
         cout<<"Selecione una opcion -> ";cin>>opc;
     }
     return 0;

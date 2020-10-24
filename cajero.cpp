@@ -36,7 +36,7 @@ void administrador()
 {
     int opc=0;
     cout << "\n---------------Menu  Administrador---------------\n";
-    cout<<"Preisione:\n1.Ver informacion de usuarios.\n2.Registrar nuevo usurio.\n3.Eliminar Usuario.\n0.Salir.\n";
+    cout<<"Preisione:\n1.Ver informacion de usuarios.\n2.Registrar nuevo usurio.\n3.Eliminar Usuario.\n4.Agregar dinero a un usuario.\n0.Salir.\n";
     cout<<"Selecione una opcion: ";cin>>opc;
     while(opc!=0){
         switch (opc) {
@@ -50,6 +50,10 @@ void administrador()
         }
             break;
         case 3:{
+            EliminarUsuario();
+        }
+            break;
+        case 4:{
 
         }
             break;
@@ -57,7 +61,7 @@ void administrador()
             cout << "Opcion no valida." << endl;
         }
         cout << "\n---------------Menu  Administrador---------------\n";
-        cout<<"Preisione:\n1.Ver informacion de usuarios.\n2.Registrar nuevo usurio.\n3.Eliminar Usuario.\n0.Salir.\n";
+        cout<<"Preisione:\n1.Ver informacion de usuarios.\n2.Registrar nuevo usurio.\n3.Eliminar Usuario.\n4.Agregar dinero a un usuario.\n0.Salir.\n";
         cout<<"Selecione una opcion: ";cin>>opc;
     }
 }
@@ -67,8 +71,12 @@ void usuario()
 
 }
 
-string CodificarInfo(string archivo)
+void CodificarInfo(string info)
 {
+    info = Str_to_Binary(info);
+    info = codificacion2(info,4);
+    info = Binary_to_Str(info);
+    EscribirArchivo("sudo.dat",info);
 
 }
 
@@ -128,21 +136,36 @@ void VerInfoUsuarios()
 void RegistrarUsuario()
 {
     string info,cedula,clave,saldo;
-    int pos = 0;
+    bool salir = true;
     long long dinero = 0;
     info = DecodificarInfo("sudo.dat");
     cin.ignore(10000,'\n');
     cout << "Ingrese la cedula del nuevo usuario: ";getline(cin,cedula);
     if(!ComprobarCedula(cedula)){
-        cin.ignore(10000,'\n');
-        cout << "Ingrese la nueva clave del usuario: ";getline(cin, clave);
-        cout << "Ingerese el dinero inicial del usuario, debe ser mayor a 500000 COP.\n";
-        cout << "Dinero inicial: ";cin >> dinero;
+        if(SoloNumeros(cedula)){
+            cout << "Ingrese la nueva clave del usuario: ";getline(cin, clave);
+            while(salir){
+                cout << "Ingerese el dinero inicial del usuario, debe ser mayor a 500000 COP.\n";
+                cout << "Dinero inicial: ";cin >> dinero;
+                if(dinero>=500000){
+                    salir = false;
+                    saldo = to_string(dinero);
+                    info += "\r\n" + cedula + ':' + clave + ':' + saldo;
+                    CodificarInfo(info);
+                }
+                else{
+                    cout << "cantidad de dinero insuficiente.\n";
+                    cout << "Presione 1 para agregar dinero o 0 para salir: ";cin>>salir;
+                }
+            }
+        }
+        else
+            cout << "La cedula son solo digitos.\n";
     }
+    else
+        cout << "Este numero de cedula ya se encuentra registrado.\n";
 
-
-
-
+    cout << "Usuario registrado con exito!\n";
 }
 
 bool ComprobarCedula(string cedula)
@@ -152,7 +175,7 @@ bool ComprobarCedula(string cedula)
     info = DecodificarInfo("sudo.dat");
     pos = info.find('\n');
     info = info.substr(pos+1);
-    while(pos!= 1){
+    while(pos!= -1){
         pos = info.find(":");
         cedula_c = info.substr(0,pos);
         if(cedula_c == cedula)
@@ -161,4 +184,18 @@ bool ComprobarCedula(string cedula)
         info = info.substr(pos+1);
     }
     return false;
+}
+
+bool SoloNumeros(string str)
+{
+    for(int i=0;i<int(str.size());i++){
+        if((int(str[i])<48) or (int(str[i])>57))
+            return false;
+    }
+    return true;
+}
+
+void EliminarUsuario()
+{
+
 }

@@ -13,7 +13,7 @@ int main()
         }
             break;
         case 2:{
-
+            inicio();
         }
         case 0:
             break;

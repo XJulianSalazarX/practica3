@@ -50,6 +50,7 @@ void administrador()
         }
             break;
         case 3:{
+
             EliminarUsuario();
         }
             break;
@@ -145,9 +146,9 @@ void RegistrarUsuario()
         if(SoloNumeros(cedula)){
             cout << "Ingrese la nueva clave del usuario: ";getline(cin, clave);
             while(salir){
-                cout << "Ingerese el dinero inicial del usuario, debe ser mayor a 500000 COP.\n";
+                cout << "Ingerese el dinero inicial del usuario, debe ser mayor a 500000 COP y divisible entre 1000.\n";
                 cout << "Dinero inicial: ";cin >> dinero;
-                if(dinero>=500000){
+                if(dinero>=500000 and dinero%1000==0){
                     salir = false;
                     saldo = to_string(dinero);
                     info += "\r\n" + cedula + ':' + clave + ':' + saldo;
@@ -197,5 +198,57 @@ bool SoloNumeros(string str)
 
 void EliminarUsuario()
 {
+    string cedula;
+    cout << "Para eliminar usuario su saldo debe ser 0 COP.\n";
+    cin.ignore(10000,'\n');
+    cout << "Cedula del usuario: ";getline(cin,cedula);
+    if(ComprobarCedula(cedula)){
+        if(ComprobarSaldo0(cedula)){
+            string info,info_final,usuario;
+            int pos;
+            info = DecodificarInfo("sudo.dat");
+            pos = info.find('\n');
+            info = info.substr(pos+1);
+            while(pos!=-1){
+                pos = info.find('\r');
+                usuario = info.substr(0,pos);
+                pos = info.find(':');
+                if(cedula == usuario.substr(0,pos))
+                   info_final += usuario + "\r\n";
 
+                pos = info.find('\n');
+                info = info.substr(pos+1);
+            }
+        }
+        else
+            cout << "El saldo del usuriion con cc: " << cedula << " no es 0 COP\n";
+    }
+    else
+        cout << "La cedula ingresada no se encuentra registrada.\n";
+
+    cout << "Usuario eliminado.\n";
+
+}
+
+bool ComprobarSaldo0(string cedula)
+{
+    string info,usuario;
+    int pos = 0;
+    info = DecodificarInfo("sudo.dat");
+    pos = info.find('\n');
+    info = info.substr(pos+1);
+    while(pos!=-1){
+        pos = info.find('\r');
+        usuario = info.substr(0,pos);
+        pos = usuario.find(':');
+        if(cedula == usuario.substr(0,pos)){
+            pos = usuario.rfind(':');
+            //usuario = usuario.substr(pos);
+            if(usuario.substr(pos)[0]=='0')
+                return true;
+        }
+        pos = info.find('\n');
+        info = info.substr(pos+1);
+    }
+    return false;
 }

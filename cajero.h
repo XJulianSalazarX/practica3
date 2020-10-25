@@ -13,14 +13,17 @@ void NuevoUsuario();
 void VerInfoUsuarios();
 void RegistrarUsuario();
 void EliminarUsuario();
+void AgregarDinero();
 
 
 //como usuario
 
-
+// funciones de ayuda
 void CodificarInfo(string);
 string DecodificarInfo(string);
 bool ComprobarCedula(string);
 bool SoloNumeros(string);
+bool ComprobarSaldo0(string);
+
 
 #endif // CAJERO_H

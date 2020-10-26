@@ -19,7 +19,23 @@ void inicio()
         }
             break;
         case 2:{
-
+            string cedula,clave;
+            cout<<"ingrese su cedula"<<endl;
+            cin>>cedula;
+            if (SoloNumeros(cedula)){
+                if (ComprobarCedula(cedula)) {
+                    cout<<"ingrese su clave"<<endl;
+                    cin>>clave;
+                    if (Comprobarclave(clave))
+                        usuario(cedula,clave);
+                    else
+                        cout << "CLave incorrecta.\n";
+                }
+                else
+                    cout << "La cedula no corresponde a ningun usuario"<<endl;
+            }
+            else
+                cout<<"La cedula son solo digitos"<<endl;
         }
             break;
         default:
@@ -46,11 +62,9 @@ void administrador()
             break;
         case 2:{
             RegistrarUsuario();
-
         }
             break;
         case 3:{
-
             EliminarUsuario();
         }
             break;
@@ -67,9 +81,36 @@ void administrador()
     }
 }
 
-void usuario()
+void usuario(string ce, string cl)
 {
+    int opc=0,retiro=0;
 
+    cout << "\n------------------Menu  Usuario------------------\n";
+    cout<<"Preisione:\n1.Consultar saldo.\n2.Retirar dinero.\n0.Salir.\n";
+    cout<<"Selecione una opcion: ";cin>>opc;
+    while(opc!=0){
+        switch (opc) {
+        case 1:{
+
+            retiro=0;
+            modificarsaldo(retiro,ce,cl);
+        }
+            break;
+        case 2:{
+
+        cout<<"ingrese el dinero a retirar, debe ser multiplo de 1000"<<endl;
+        cin>>retiro;
+         modificarsaldo(retiro, ce, cl);
+
+        }
+            break;
+        default:
+            cout << "Opcion no valida." << endl;
+        }
+        cout << "\n------------------Menu  Usuario------------------\n";
+        cout<<"Preisione:\n1.Consultar saldo.\n2.Retirar dinero.\n0.Salir.\n";
+        cout<<"Selecione una opcion: ";cin>>opc;
+    }
 }
 
 void CodificarInfo(string info)
@@ -226,7 +267,7 @@ void EliminarUsuario()
             cout << "Usuario eliminado.\n";
         }
         else
-            cout << "El saldo del usuriion con cc: " << cedula << " no es 0 COP\n";
+            cout << "El saldo del usuri0 con cc: " << cedula << " no es 0 COP\n";
     }
     else
         cout << "La cedula ingresada no se encuentra registrada.\n";
@@ -264,7 +305,7 @@ void AgregarDinero()
     if(ComprobarCedula(cedula)){
         cout << "El dinero a ingresar debe ser mayor o igual a 1000 COP y divisble entre 1000.\n";
         cout << "Dinero a agregar: ";cin>>agregar;
-        if(agregar>1000 and agregar%1000==0){
+        if(agregar>=1000 and agregar%1000==0){
             string info,info_final,usuario;
             long long pos = 0,dinero=0;
             info = DecodificarInfo("sudo.dat");
@@ -296,4 +337,109 @@ void AgregarDinero()
     }
     else
         cout << "El usuario no se encuentra registrado.\n";
+}
+
+void modificarsaldo(int retiro,string ce,string cl){
+    if ( verificaretiro(retiro)==true) {
+
+        string usuario,modusuario;
+        int pos=0;
+        usuario=DecodificarInfo("sudo.dat");
+
+        pos = usuario.find('\n');
+
+        modusuario+= usuario.substr(0,pos-1);
+
+        usuario = usuario.substr(pos+1);
+
+        for(int num=1;pos!=-1;num++){
+            string cedula,clave,saldo;
+            pos = usuario.find(':');
+            cedula = usuario.substr(0,pos);
+            pos = usuario.find(':',pos+1);
+            clave = usuario.substr(0,pos);
+            clave = clave.substr(cedula.size()+1);
+            pos = usuario.find('\r');
+            saldo = usuario.substr(0,pos);
+            saldo = saldo.substr(cedula.size()+clave.size()+2);
+
+            if (ce==cedula and cl==clave){
+                int saldomod = stoi(saldo, nullptr, 10);
+
+                if(retiro!=0 and (saldomod-1000)-retiro>=0){
+                    cout<<"su saldo es de "<<saldo<<" COP"<<endl;
+
+                    cout<<"se ha retirado "<<retiro<< " COP"<<endl;
+                    cout<<"la transaccion tendra un costo de 1000 COP"<<endl;
+                    saldomod-=1000;
+                    saldomod-=retiro;
+
+                    string mod= to_string(saldomod);
+
+                    cout<< "su nuevo saldo es de "<< mod<< " COP"<<endl;
+
+                    modusuario += "\r\n" + cedula + ':' + clave + ':' + mod;
+                }
+                else if(retiro==0 and saldomod-1000>=0) {
+                    cout<<"su saldo es de "<<saldo<<" COP"<<endl;
+
+                    cout<<"la consulta tendra un costo de 1000 COP"<<endl;
+
+                    saldomod-=1000;
+
+                    string mod= to_string(saldomod);
+
+                    cout<< "su nuevo saldo es de "<< mod<< " COP"<<endl;
+
+                    modusuario += "\r\n" + cedula + ':' + clave + ':' + mod;
+
+                }
+
+                else {
+                    cout<<"no es posible realizar la accion, no hay suficiente dinero."<<endl;
+                    modusuario += "\r\n" + cedula + ':' + clave + ':' + saldo;
+
+                }
+
+            }
+            else {
+                modusuario += "\r\n" + cedula + ':' + clave + ':' + saldo;
+
+            }
+            pos = usuario.find('\n');
+            usuario = usuario.substr(pos+1);
+
+        }
+        CodificarInfo(modusuario);
+    }
+    else
+        cout << "no es posible realizar el retiro, no es divisible entre 1000" << endl;
+}
+
+bool Comprobarclave(string cl)
+{
+    string info, clave, cedula;
+    int pos = 0;
+    info = DecodificarInfo("sudo.dat");
+    pos = info.find('\n');
+    info = info.substr(pos+1);
+    while(pos!= -1){
+        pos = info.find(":");
+        cedula = info.substr(0,pos);
+        pos = info.find(':',pos+1);
+        clave = info.substr(0,pos);
+        clave = clave.substr(cedula.size()+1);
+
+        if(clave == cl)
+            return true;
+        pos = info.find('\n');
+        info = info.substr(pos+1);
+    }
+    return false;
+}
+
+bool verificaretiro( int retiro){
+    if (retiro%1000==0 )   return true;
+    else
+        return false;
 }

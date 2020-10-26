@@ -5,7 +5,7 @@
 //menu del cajero
 void inicio();
 void administrador();
-void usuario();
+void usuario(string, string);
 
 //como administrador
 bool ClaveAdmin();
@@ -15,8 +15,10 @@ void RegistrarUsuario();
 void EliminarUsuario();
 void AgregarDinero();
 
-
 //como usuario
+void modificarsaldo(int retiro, string cedula, string clave);
+bool Comprobarclave(string cl);
+bool verificaretiro( int retiro);
 
 // funciones de ayuda
 void CodificarInfo(string);

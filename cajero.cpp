@@ -55,7 +55,7 @@ void administrador()
         }
             break;
         case 4:{
-
+            AgregarDinero();
         }
             break;
         default:
@@ -128,7 +128,7 @@ void VerInfoUsuarios()
        cout << "-------Usuario" <<  num <<"-------\n";
        cout << "Cedula: " << cedula << endl;
        cout << "Clave: " << clave << endl;
-       cout << "Saldo: " << saldo << "COP\n" << endl;
+       cout << "Saldo: " << saldo << " COP\n" << endl;
        pos = usuarios.find('\n');
        usuarios = usuarios.substr(pos+1);
    }
@@ -208,25 +208,28 @@ void EliminarUsuario()
             int pos;
             info = DecodificarInfo("sudo.dat");
             pos = info.find('\n');
+            info_final = info.substr(0,pos+1);
             info = info.substr(pos+1);
             while(pos!=-1){
                 pos = info.find('\r');
                 usuario = info.substr(0,pos);
                 pos = info.find(':');
-                if(cedula == usuario.substr(0,pos))
+                if(cedula != usuario.substr(0,pos))
                    info_final += usuario + "\r\n";
 
                 pos = info.find('\n');
                 info = info.substr(pos+1);
             }
+            info_final.pop_back();
+            info_final.pop_back();
+            CodificarInfo(info_final);
+            cout << "Usuario eliminado.\n";
         }
         else
             cout << "El saldo del usuriion con cc: " << cedula << " no es 0 COP\n";
     }
     else
         cout << "La cedula ingresada no se encuentra registrada.\n";
-
-    cout << "Usuario eliminado.\n";
 
 }
 
@@ -243,12 +246,54 @@ bool ComprobarSaldo0(string cedula)
         pos = usuario.find(':');
         if(cedula == usuario.substr(0,pos)){
             pos = usuario.rfind(':');
-            //usuario = usuario.substr(pos);
-            if(usuario.substr(pos)[0]=='0')
+            if(usuario.substr(pos+1)[0]=='0')
                 return true;
         }
         pos = info.find('\n');
         info = info.substr(pos+1);
     }
     return false;
+}
+
+void AgregarDinero()
+{
+    string cedula;
+    long long int agregar;
+    cin.ignore(10000,'\n');
+    cout<<"Ingrese la cedula del usuario a agregar dinero: ";getline(cin,cedula);
+    if(ComprobarCedula(cedula)){
+        cout << "El dinero a ingresar debe ser mayor o igual a 1000 COP y divisble entre 1000.\n";
+        cout << "Dinero a agregar: ";cin>>agregar;
+        if(agregar>1000 and agregar%1000==0){
+            string info,info_final,usuario;
+            long long pos = 0,dinero=0;
+            info = DecodificarInfo("sudo.dat");
+            pos = info.find('\n');
+            info_final = info.substr(0,pos+1);
+            info = info.substr(pos+1);
+            while(pos!=-1){
+               pos = info.find('\r');
+               usuario = info.substr(0,pos);
+               pos = usuario.find(':');
+               if(cedula == usuario.substr(0,pos)){
+                   pos = usuario.rfind(':');
+                   dinero = stoi(usuario.substr(pos+1),nullptr,10);
+                   dinero += agregar;
+                   usuario = usuario.substr(0,pos+1);
+                   usuario += to_string(dinero);
+               }
+               info_final += usuario + "\r\n";
+               pos = info.find('\n');
+               info = info.substr(pos+1);
+            }
+            info_final.pop_back();
+            info_final.pop_back();
+            CodificarInfo(info_final);
+
+        }
+        else
+            cout << "cantidad de dinero insuficiente o invalida.\n";
+    }
+    else
+        cout << "El usuario no se encuentra registrado.\n";
 }

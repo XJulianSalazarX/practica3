@@ -91,7 +91,6 @@ void usuario(string ce, string cl)
     while(opc!=0){
         switch (opc) {
         case 1:{
-
             retiro=0;
             modificarsaldo(retiro,ce,cl);
         }
@@ -101,7 +100,6 @@ void usuario(string ce, string cl)
         cout<<"ingrese el dinero a retirar, debe ser multiplo de 1000"<<endl;
         cin>>retiro;
          modificarsaldo(retiro, ce, cl);
-
         }
             break;
         default:
@@ -118,8 +116,8 @@ void CodificarInfo(string info)
     info = Str_to_Binary(info);
     info = codificacion2(info,4);
     info = Binary_to_Str(info);
-    EscribirArchivo("sudo.dat",info);
-
+    EscribirArchivo("sudo.dat",info); //si sudo.dat esta en el build
+   // EscribirArchivo("../practica3/sudo.dat",info);
 }
 
 string DecodificarInfo(string archivo)
@@ -140,6 +138,7 @@ bool ClaveAdmin()
     cin.ignore(10000,'\n');
     cout << "Ingrese la clave de administrador: ";getline(cin,clave);
     clave_admin = DecodificarInfo("sudo.dat");
+    //clave_admin = DecodificarInfo("../practica3/sudo.dat");
     pos = clave_admin.find('\r');
     clave_admin = clave_admin.substr(0,pos);
     if(clave_admin==clave)
@@ -154,6 +153,7 @@ void VerInfoUsuarios()
     string usuarios;
     int pos = 0;
     usuarios = DecodificarInfo("sudo.dat");
+    //usuarios = DecodificarInfo("../practica3/sudo.dat");
     pos = usuarios.find('\n');
    usuarios = usuarios.substr(pos+1);
    for(int num=1;pos!=-1;num++){
@@ -181,6 +181,7 @@ void RegistrarUsuario()
     bool salir = true;
     long long dinero = 0;
     info = DecodificarInfo("sudo.dat");
+    //info = DecodificarInfo("../practica3/sudo.dat");
     cin.ignore(10000,'\n');
     cout << "Ingrese la cedula del nuevo usuario: ";getline(cin,cedula);
     if(!ComprobarCedula(cedula)){
@@ -215,6 +216,7 @@ bool ComprobarCedula(string cedula)
     string info, cedula_c;
     int pos = 0;
     info = DecodificarInfo("sudo.dat");
+    //info = DecodificarInfo("../practica3/sudo.dat");
     pos = info.find('\n');
     info = info.substr(pos+1);
     while(pos!= -1){
@@ -248,6 +250,7 @@ void EliminarUsuario()
             string info,info_final,usuario;
             int pos;
             info = DecodificarInfo("sudo.dat");
+            //info = DecodificarInfo("../practica3/sudo.dat");
             pos = info.find('\n');
             info_final = info.substr(0,pos+1);
             info = info.substr(pos+1);
@@ -279,6 +282,7 @@ bool ComprobarSaldo0(string cedula)
     string info,usuario;
     int pos = 0;
     info = DecodificarInfo("sudo.dat");
+    //info = DecodificarInfo("../practica3/sudo.dat");
     pos = info.find('\n');
     info = info.substr(pos+1);
     while(pos!=-1){
@@ -309,6 +313,7 @@ void AgregarDinero()
             string info,info_final,usuario;
             long long pos = 0,dinero=0;
             info = DecodificarInfo("sudo.dat");
+            //info = DecodificarInfo("../practica3/sudo.dat");
             pos = info.find('\n');
             info_final = info.substr(0,pos+1);
             info = info.substr(pos+1);
@@ -345,6 +350,7 @@ void modificarsaldo(int retiro,string ce,string cl){
         string usuario,modusuario;
         int pos=0;
         usuario=DecodificarInfo("sudo.dat");
+        //usuario = DecodificarInfo("../practica3/sudo.dat");
 
         pos = usuario.find('\n');
 
@@ -421,6 +427,7 @@ bool Comprobarclave(string cl)
     string info, clave, cedula;
     int pos = 0;
     info = DecodificarInfo("sudo.dat");
+    //info = DecodificarInfo("../practica3/sudo.dat");
     pos = info.find('\n');
     info = info.substr(pos+1);
     while(pos!= -1){

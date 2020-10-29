@@ -1,5 +1,10 @@
 #include "cajero.h"
 #include "archivos.h"
+/*
+ Integrantes:
+    -Diego Zuluaga.
+    -Julian Salazar.
+ */
 int main()
 {
     int opc=0;

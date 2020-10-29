@@ -5,5 +5,4 @@
 void MenuArchivos();
 void CrearArchivos();
 void EliminarArchivos();
-
 #endif // ARCHIVOS_H

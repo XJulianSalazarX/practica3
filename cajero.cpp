@@ -11,6 +11,7 @@ void inicio()
     while(opc!=0){
         switch (opc) {
         case 1:{
+            //clave: adfgdk
             if(ClaveAdmin())
                 administrador();
             else
@@ -117,7 +118,7 @@ void CodificarInfo(string info)
     info = codificacion2(info,4);
     info = Binary_to_Str(info);
     EscribirArchivo("sudo.dat",info); //si sudo.dat esta en el build
-   // EscribirArchivo("../practica3/sudo.dat",info);
+   // EscribirArchivo("../practica3/sudo.dat",info); //carpeta practica3
 }
 
 string DecodificarInfo(string archivo)

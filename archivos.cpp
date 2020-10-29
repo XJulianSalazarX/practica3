@@ -54,5 +54,4 @@ void EliminarArchivos()
         cout << "El archivo no existe.\n";
         exit(1);
     }
-
 }

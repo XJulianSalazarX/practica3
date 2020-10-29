@@ -4,7 +4,7 @@ void MenuArchivos()
 {
     int opc;
     cout << "\n------------------Menu Archivos------------------\n";
-    cout << "Seleccione:\n1.Crear archivo.\n2.ELiminar archivo.\n.0.Salir.\n";
+    cout << "Seleccione:\n1.Crear archivo.\n2.ELiminar archivo.\n0.Salir.\n";
     cout << "Seleccione: ";cin >> opc;
     while(opc!=0){
         switch (opc) {
@@ -18,8 +18,10 @@ void MenuArchivos()
             break;
         default:
             cout << "Opcion no valida.\n";
-
         }
+        cout << "\n------------------Menu Archivos------------------\n";
+        cout << "Seleccione:\n1.Crear archivo.\n2.ELiminar archivo.\n0.Salir.\n";
+        cout << "Seleccione: ";cin >> opc;
     }
 }
 
@@ -43,8 +45,14 @@ void CrearArchivos()
 void EliminarArchivos()
 {
     string archivo;
-    fstream Eliminar;
     cout << "Nombre del archivo: ";cin >> archivo;
-
+    if(ifstream(archivo)){
+        remove(archivo.c_str());
+        cout << "Archivo eliminado.\n";
+    }
+    else{
+        cout << "El archivo no existe.\n";
+        exit(1);
+    }
 
 }

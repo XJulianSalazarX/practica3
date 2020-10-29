@@ -1,10 +1,10 @@
 #include "cajero.h"
-
+#include "archivos.h"
 int main()
 {
     int opc=0;
     cout << "----------------Seccion principal----------------\n";
-    cout<<"Ingrese:\n1.Usar metodos de codificacion y decodificacion.\n2.Usar cajero.\n0. Para salir.\n";
+    cout<<"Ingrese:\n1.Usar metodos de codificacion y decodificacion.\n2.Usar cajero.\n3.Crear\\Eliminar archivo.\n0. Para salir.\n";
     cout<<"Selecione una opcion: ";cin>>opc;
     while (opc!=0) {
         switch (opc) {
@@ -15,7 +15,10 @@ int main()
         case 2:{
             inicio();
         }
-        case 0:
+            break;
+        case 3:{
+            MenuArchivos();
+        }
             break;
         default:
             cout<<"Opcion no valida.\n";
